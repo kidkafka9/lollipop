@@ -56,23 +56,23 @@ func parseStatus(path, out string) (Repo, error) {
 		if aheadClean, ok := strings.CutPrefix(cleanLine, "# branch.ab "); ok {
 			fields := strings.Fields(aheadClean)
 
-			if len(fields) == 2 {
-				var err error
-				ahead, err := strconv.Atoi(fields[0])
-				if err != nil {
-					return Repo{}, fmt.Errorf("parse ahead %q: %w", cleanLine, err)
-				}
-				behind, err := strconv.Atoi(fields[1])
-				if err != nil {
-					return Repo{}, fmt.Errorf("parse behind %q: %w", cleanLine, err)
-				}
-				repo.Ahead = ahead
-				repo.Behind = -behind
-			}
-
 			if len(fields) != 2 {
 				return Repo{}, fmt.Errorf("unexpected field count (%d) in line %q", len(fields), line)
 			}
+
+			ahead, err := strconv.Atoi(fields[0])
+			if err != nil {
+				return Repo{}, fmt.Errorf("parse ahead %q: %w", cleanLine, err)
+			}
+
+			behind, err := strconv.Atoi(fields[1])
+			if err != nil {
+				return Repo{}, fmt.Errorf("parse behind %q: %w", cleanLine, err)
+			}
+
+			repo.Ahead = ahead
+			repo.Behind = -behind
+
 		}
 
 		if strings.HasPrefix(cleanLine, "# ") {
