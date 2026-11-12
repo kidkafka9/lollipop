@@ -2,14 +2,9 @@ package main
 
 import (
 	"fmt"
-	"log"
+	"os"
 
 	tea "charm.land/bubbletea/v2"
-)
-
-const (
-	applicationName  = "binnacle"
-	notProvidedValue = "[not-provided]"
 )
 
 type model struct {
@@ -27,7 +22,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.height = msg.Height
 		return m, nil
 
-	case tea.KeyMsg:
+	case tea.KeyPressMsg:
 		switch msg.String() {
 		case "ctrl+c", "q":
 			return m, tea.Quit
@@ -38,13 +33,14 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m model) View() tea.View {
-	v := tea.NewView(fmt.Sprintf("work in progress..."))
+	v := tea.NewView(fmt.Sprintf("Window size: %dx%d", m.width, m.height))
 	v.AltScreen = true
 	return v
 }
 
 func main() {
 	if _, err := tea.NewProgram(model{}).Run(); err != nil {
-		log.Fatal(err)
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
 	}
 }
