@@ -4,6 +4,7 @@ package config
 import (
 	"errors"
 	"fmt"
+	"io/fs"
 	"os"
 	"path/filepath"
 	"strings"
@@ -65,6 +66,9 @@ func Load(path string) (Config, error) {
 
 	var cfg Config
 	meta, err := toml.DecodeFile(path, &cfg)
+	if _, ok := errors.AsType[*fs.PathError](err); ok {
+		return Config{}, fmt.Errorf("read config: %w", err)
+	}
 	if err != nil {
 		return Config{}, fmt.Errorf("read config %s: %w", path, err)
 	}

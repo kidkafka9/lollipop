@@ -1,4 +1,6 @@
-// lollipop is a terminal dashboard for the tools a DevOps or a platform engineer needs on a daily basis. It reads the sources to show from a TOML config file.
+// lollipop is a terminal dashboard for the tools a DevOps or
+// a platform engineer needs on a daily basis.
+// It reads the sources to show from a TOML config file.
 //
 // Usage:
 //
@@ -8,14 +10,18 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"os"
+	"strings"
 
 	tea "charm.land/bubbletea/v2"
+	"github.com/kidkafka9/lollipop/internal/config"
 )
 
 type model struct {
 	width, height int
+	cfg           config.Config
 }
 
 func (m model) Init() tea.Cmd {
@@ -40,26 +46,58 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m model) View() tea.View {
-	v := tea.NewView(fmt.Sprintf("Window size: %dx%d", m.width, m.height))
+	const (
+		footer = "\n(ctrl+c or q to quit)\n"
+	)
+
+	var sourceNames []string
+	for _, s := range m.cfg.Sources {
+		sourceNames = append(sourceNames, s.Name)
+	}
+
+	f := strings.Join(sourceNames, ", ") + "\n" + footer
+
+	v := tea.NewView(f)
 	v.AltScreen = true
 	return v
 }
 
-func main() {
-	//configFile := flag.String("config", "", "config file")
-	//configPath := flag.String("config_path", "", "config file path")
-	//
-	//if configPath == nil || *configPath == "" {
-	//	configPath == config.DefaultPath()
-	//}
-	type Config struct {
-		F
+func newModel(cfg config.Config) model {
+	return model{cfg: cfg}
+}
+
+func run() error {
+	configPath := flag.String("config", "", "path to the config file")
+	flag.Parse()
+
+	if *configPath == "" {
+		path, err := config.DefaultPath()
+		if err != nil {
+			return err
+		}
+
+		*configPath = path
 	}
-	if _, err := tea.NewProgram(model{}).Run(); err != nil {
+
+	cfg, err := config.Load(*configPath)
+	if err != nil {
+		return err
+	}
+
+	if _, err := tea.NewProgram(newModel(cfg)).Run(); err != nil {
 		_, err := fmt.Fprintln(os.Stderr, err)
 		if err != nil {
-			return
+			return err
 		}
+		return err
+	}
+
+	return nil
+}
+
+func main() {
+	if err := run(); err != nil {
+		fmt.Fprintln(os.Stderr, "lollipop:", err)
 		os.Exit(1)
 	}
 }
