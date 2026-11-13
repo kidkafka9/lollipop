@@ -1,3 +1,5 @@
+// Package gitrepo finds local git repositories and reads their state with
+// git status.
 package gitrepo
 
 import (
@@ -9,11 +11,25 @@ import (
 	"strings"
 )
 
+// Repo is the state of one repository.
 type Repo struct {
-	Path, Branch         string
-	Dirty, Ahead, Behind int
+	// Path is the repository's folder, as given to Read.
+	Path string
+	// Branch is the checked-out branch, or "(detached)" when HEAD is not on
+	// a branch.
+	Branch string
+	// Dirty is the number of changed, staged, conflicted and untracked files.
+	Dirty int
+	// Ahead and Behind count the commits not yet pushed to, and not yet pulled
+	// from, the upstream branch. Both are 0 when there is no upstream.
+	Ahead, Behind int
 }
 
+// Read runs git status in the repository at path and returns its state.
+// It doesn't take git's index lock, so it can run in the background while
+// you use git in the same repository. Cancelling ctx stops git.
+//
+// The error contains git's own message, such as "not a git repository".
 func Read(ctx context.Context, path string) (Repo, error) {
 	cmd := exec.CommandContext(
 		ctx,
@@ -44,6 +60,8 @@ func Read(ctx context.Context, path string) (Repo, error) {
 	return parseStatus(path, string(out))
 }
 
+// parseStatus reads the output of git status --porcelain=v2 --branch.
+// It returns an error for a branch.ab line it can't read.
 func parseStatus(path, out string) (Repo, error) {
 	repo := Repo{Path: path}
 	for line := range strings.Lines(out) {

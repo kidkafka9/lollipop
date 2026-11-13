@@ -1,3 +1,10 @@
+// Binnacle is a terminal dashboard for the tools a DevOps or a platform engineer needs on a daily basis. It reads the sources to show from a TOML config file.
+//
+// Usage:
+//
+//	binnacle
+//
+// Press q or ctrl+c to quit.
 package main
 
 import (
@@ -40,7 +47,10 @@ func (m model) View() tea.View {
 
 func main() {
 	if _, err := tea.NewProgram(model{}).Run(); err != nil {
-		fmt.Fprintln(os.Stderr, err)
+		_, err := fmt.Fprintln(os.Stderr, err)
+		if err != nil {
+			return
+		}
 		os.Exit(1)
 	}
 }
