@@ -1,5 +1,8 @@
 # Lollipop
-![SUNDAE.png](../../Downloads/SUNDAE.png)
+
+<p>
+  <img src="assets/banner.png" alt="Lollipop" width="600">
+</p>
 
 <p>
   <a href="https://pkg.go.dev/github.com/kidkafka9/lollipop"><img src="https://pkg.go.dev/badge/github.com/kidkafka9/lollipop.svg" alt="Go Reference"></a>
