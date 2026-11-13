@@ -1,12 +1,11 @@
 # Lollipop
 
 <p>
-  <img src="assets/banner.png" alt="Lollipop" width="600">
+  <img src="assets/banner.png" alt="Lollipop" width="150">
 </p>
 
 <p>
   <a href="https://pkg.go.dev/github.com/kidkafka9/lollipop"><img src="https://pkg.go.dev/badge/github.com/kidkafka9/lollipop.svg" alt="Go Reference"></a>
-  <a href="https://github.com/kidkafka9/lollipop/actions/workflows/ci.yml"><img src="https://github.com/kidkafka9/lollipop/actions/workflows/ci.yml/badge.svg" alt="Build Status"></a>
 </p>
 
 A terminal dashboard for everything you keep an eye on. 🍭
