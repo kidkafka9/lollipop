@@ -7,7 +7,7 @@
 *.dll
 *.so
 *.dylib
-/binnacle
+/sundae
 
 # Test binary, built with `go test -c`
 *.test

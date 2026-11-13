@@ -1,8 +1,8 @@
-// Binnacle is a terminal dashboard for the tools a DevOps or a platform engineer needs on a daily basis. It reads the sources to show from a TOML config file.
+// sundae is a terminal dashboard for the tools a DevOps or a platform engineer needs on a daily basis. It reads the sources to show from a TOML config file.
 //
 // Usage:
 //
-//	binnacle
+//	sundae
 //
 // Press q or ctrl+c to quit.
 package main

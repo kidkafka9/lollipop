@@ -1,4 +1,4 @@
-module github.com/kidkafka9/binnacle
+module github.com/kidkafka9/sundae
 
 go 1.27.3
 

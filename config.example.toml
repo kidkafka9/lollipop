@@ -1,9 +1,9 @@
-# binnacle config
+# sundae config
 #
-# Copy this file to ~/.config/binnacle/config.toml and change it to your setup,
-# or start binnacle with --config <path>.
+# Copy this file to ~/.config/sundae/config.toml and change it to your setup,
+# or start sundae with --config <path>.
 #
-# Each [[source]] block is one thing binnacle watches. Add as many as you like,
+# Each [[source]] block is one thing sundae watches. Add as many as you like,
 # of any type. Every source needs:
 #   type  what kind of source it is (see the types below)
 #   name  a short label, shown as the panel title; must be unique
@@ -27,25 +27,3 @@ paths = ["~/work/my-team", "~/work/platform"]
 type  = "gitrepo"
 name  = "personal"
 paths = ["~/code"]
-
-
-# ── Not built yet ────────────────────────────────────────────────────────
-# Planned source types, so you can see where this is going. binnacle rejects
-# unknown types, so these stay commented out until they exist.
-
-# [[source]]
-# type       = "kubernetes"
-# name       = "stg"
-# kubeconfig = "~/.kube/my-stg-cluster"
-#
-# [[source]]
-# type       = "kubernetes"
-# name       = "prod"
-# kubeconfig = "~/.kube/my-prod-cluster"
-#
-# [[source]]
-# type   = "grafana"
-# name   = "alerts"
-# url    = "https://example.grafana.net"
-# folder = "abc123folderuid"
-# # No token here: binnacle reads it from the GRAFANA_TOKEN environment variable.

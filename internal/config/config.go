@@ -1,4 +1,4 @@
-// Package config reads binnacle's TOML config file.
+// Package config reads sundae's TOML config file.
 package config
 
 import (
@@ -37,20 +37,20 @@ type Config struct {
 	Sources []Source `toml:"source"`
 }
 
-// Source is one [[source]] block: one thing binnacle watches.
+// Source is one [[source]] block: one thing sundae watches.
 type Source struct {
 	Type  string   `toml:"type"`
 	Name  string   `toml:"name"`
 	Paths []string `toml:"paths"`
 }
 
-// DefaultPath returns ~/.config/binnacle/config.toml.
+// DefaultPath returns ~/.config/sundae/config.toml.
 func DefaultPath() (string, error) {
 	home, err := os.UserHomeDir()
 	if err != nil {
 		return "", fmt.Errorf("find home folder: %w", err)
 	}
-	return filepath.Join(home, ".config", "binnacle", "config.toml"), nil
+	return filepath.Join(home, ".config", "sundae", "config.toml"), nil
 }
 
 // Load reads and checks the config file at path. It reports every problem in
