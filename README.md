@@ -1,7 +1,7 @@
 # Lollipop
 
 <p>
-  <img src="assets/banner.png" alt="Lollipop" width="150">
+  <img src="assets/banner.png" alt="Lollipop" width="300">
 </p>
 
 <p>
