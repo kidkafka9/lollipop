@@ -329,7 +329,7 @@ func TestDefaultPath(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	want := filepath.Join(home, ".config", "sundae", "config.toml")
+	want := filepath.Join(home, ".config", "lollipop", "config.toml")
 	if got != want {
 		t.Errorf("got %q, want %q", got, want)
 	}

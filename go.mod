@@ -1,4 +1,4 @@
-module github.com/kidkafka9/sundae
+module github.com/kidkafka9/lollipop
 
 go 1.27.3
 

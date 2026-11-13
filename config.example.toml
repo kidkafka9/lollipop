@@ -1,9 +1,9 @@
-# sundae config
+# lollipop config
 #
-# Copy this file to ~/.config/sundae/config.toml and change it to your setup,
-# or start sundae with --config <path>.
+# Copy this file to ~/.config/lollipop/config.toml and change it to your setup,
+# or start lollipop with --config <path>.
 #
-# Each [[source]] block is one thing sundae watches. Add as many as you like,
+# Each [[source]] block is one thing lollipop watches. Add as many as you like,
 # of any type. Every source needs:
 #   type  what kind of source it is (see the types below)
 #   name  a short label, shown as the panel title; must be unique

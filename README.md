@@ -1,25 +1,25 @@
-# Sundae
+# Lollipop
 
 <p>
-  <a href="https://pkg.go.dev/github.com/kidkafka9/sundae"><img src="https://pkg.go.dev/badge/github.com/kidkafka9/sundae.svg" alt="Go Reference"></a>
+  <a href="https://pkg.go.dev/github.com/kidkafka9/lollipop"><img src="https://pkg.go.dev/badge/github.com/kidkafka9/lollipop.svg" alt="Go Reference"></a>
 </p>
 
-A terminal dashboard for everything you keep an eye on. 🍨
+A terminal dashboard for everything you keep an eye on. 🍭
 
-Sundae puts the tools you check all day into one screen.
+Lollipop puts the tools you check all day into one screen.
 
 <!-- Demo GIF goes here once the panels exist. Record it with VHS: https://github.com/charmbracelet/vhs -->
 
 > [!NOTE]
-> Sundae is in early development.
+> Lollipop is in early development.
 
 ## Features
 
-- **Git repositories at a glance.** Sundae finds every repository under the
+- **Git repositories at a glance.** Lollipop finds every repository under the
   folders you choose, at any depth, and shows its branch, changed files, and
   commits ahead of or behind its upstream.
 - **One small config file.** A short TOML file lists what to watch.
-- **Polite in the background.** Sundae reads git without taking its index lock,
+- **Polite in the background.** Lollipop reads git without taking its index lock,
   so it never gets in the way of your own commits.
 - **Built for many tools.** Every source type is separate, so new ones (Kubernetes,
   Grafana, CI pipelines) are easy to pull in without changing the others.
@@ -30,33 +30,33 @@ You need [Go](https://go.dev/dl/) 1.27 or newer, and `git` for the git
 repository source.
 
 ```bash
-go install github.com/kidkafka9/sundae/cmd/sundae@latest
+go install github.com/kidkafka9/lollipop/cmd/lollipop@latest
 ```
 
 Or build it from source:
 
 ```bash
-git clone https://github.com/kidkafka9/sundae.git
-cd sundae
-go build ./cmd/sundae
+git clone https://github.com/kidkafka9/lollipop.git
+cd lollipop
+go build ./cmd/lollipop
 ```
 
 ## Usage
 
 ```bash
-sundae                          # reads ~/.config/sundae/config.toml
-sundae --config ./my-config.toml
+lollipop                          # reads ~/.config/lollipop/config.toml
+lollipop --config ./my-config.toml
 ```
 
 Press `q` or `ctrl+c` to quit.
 
 ## Configuration
 
-Sundae reads a TOML file. Start from the example:
+Lollipop reads a TOML file. Start from the example:
 
 ```bash
-mkdir -p ~/.config/sundae
-cp config.example.toml ~/.config/sundae/config.toml
+mkdir -p ~/.config/lollipop
+cp config.example.toml ~/.config/lollipop/config.toml
 ```
 
 Each `[[source]]` block is one thing to watch. Add as many as you like:
@@ -94,7 +94,7 @@ Not chosen yet. A license will be added before the first public release.
 
 ---
 
-Sundae is built with [Bubble Tea](https://github.com/charmbracelet/bubbletea),
+Lollipop is built with [Bubble Tea](https://github.com/charmbracelet/bubbletea),
 [Lip Gloss](https://github.com/charmbracelet/lipgloss) and
 [Bubbles](https://github.com/charmbracelet/bubbles), and uses the CharmTone
 palette by [Charm](https://charm.sh).

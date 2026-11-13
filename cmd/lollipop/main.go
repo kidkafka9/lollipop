@@ -1,8 +1,8 @@
-// sundae is a terminal dashboard for the tools a DevOps or a platform engineer needs on a daily basis. It reads the sources to show from a TOML config file.
+// lollipop is a terminal dashboard for the tools a DevOps or a platform engineer needs on a daily basis. It reads the sources to show from a TOML config file.
 //
 // Usage:
 //
-//	sundae
+//	lollipop
 //
 // Press q or ctrl+c to quit.
 package main
@@ -46,6 +46,15 @@ func (m model) View() tea.View {
 }
 
 func main() {
+	//configFile := flag.String("config", "", "config file")
+	//configPath := flag.String("config_path", "", "config file path")
+	//
+	//if configPath == nil || *configPath == "" {
+	//	configPath == config.DefaultPath()
+	//}
+	type Config struct {
+		F
+	}
 	if _, err := tea.NewProgram(model{}).Run(); err != nil {
 		_, err := fmt.Fprintln(os.Stderr, err)
 		if err != nil {
