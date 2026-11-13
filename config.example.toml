@@ -1,0 +1,51 @@
+# binnacle config
+#
+# Copy this file to ~/.config/binnacle/config.toml and change it to your setup,
+# or start binnacle with --config <path>.
+#
+# Each [[source]] block is one thing binnacle watches. Add as many as you like,
+# of any type. Every source needs:
+#   type  what kind of source it is (see the types below)
+#   name  a short label, shown as the panel title; must be unique
+# The other keys depend on the type.
+#
+# Paths may start with ~/ for your home folder. Relative paths are taken from
+# the folder this file is in.
+
+
+# ── gitrepo ──────────────────────────────────────────────────────────────
+# Finds every git repository under the given folders (at any depth) and shows
+# its branch, changed files, and commits ahead of / behind its upstream.
+
+[[source]]
+type  = "gitrepo"
+name  = "team"
+# Folders to search. Each one is searched with all its subfolders.
+paths = ["~/work/my-team", "~/work/platform"]
+
+[[source]]
+type  = "gitrepo"
+name  = "personal"
+paths = ["~/code"]
+
+
+# ── Not built yet ────────────────────────────────────────────────────────
+# Planned source types, so you can see where this is going. binnacle rejects
+# unknown types, so these stay commented out until they exist.
+
+# [[source]]
+# type       = "kubernetes"
+# name       = "stg"
+# kubeconfig = "~/.kube/my-stg-cluster"
+#
+# [[source]]
+# type       = "kubernetes"
+# name       = "prod"
+# kubeconfig = "~/.kube/my-prod-cluster"
+#
+# [[source]]
+# type   = "grafana"
+# name   = "alerts"
+# url    = "https://example.grafana.net"
+# folder = "abc123folderuid"
+# # No token here: binnacle reads it from the GRAFANA_TOKEN environment variable.
