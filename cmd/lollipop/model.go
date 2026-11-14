@@ -22,7 +22,12 @@ type sourceState struct {
 }
 
 func (m model) Init() tea.Cmd {
-	return nil
+	cmds := make([]tea.Cmd, len(m.cfg.Sources))
+	for i, src := range m.cfg.Sources {
+		cmds[i] = loadSource(i, src)
+	}
+
+	return tea.Batch(cmds...)
 }
 
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
