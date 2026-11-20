@@ -2,22 +2,25 @@ package main
 
 import (
 	"fmt"
-	"strings"
 
 	tea "charm.land/bubbletea/v2"
+	"charm.land/lipgloss/v2"
 	"github.com/kidkafka9/lollipop/internal/config"
-	"github.com/kidkafka9/lollipop/internal/source/gitrepo"
 )
 
+// model is the whole state of the program: the config, the terminal size and
+// what has been loaded for each source.
 type model struct {
 	width, height int
 	cfg           config.Config
 	sources       []sourceState
 }
 
+// sourceState is what the screen shows for one source. It has the same index
+// as the source in cfg.Sources.
 type sourceState struct {
 	loading  bool
-	repos    []gitrepo.Repo
+	repos    []repoRow
 	problems []error
 }
 
@@ -53,24 +56,31 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m model) View() tea.View {
-	const footer = "\n(ctrl+c or q to quit)\n"
-
-	var b strings.Builder
+	var problems []string
+	panels := make([]string, 0, len(m.cfg.Sources))
 
 	for i, src := range m.cfg.Sources {
+		style := panelStyle
 		st := m.sources[i]
-		fmt.Fprintf(&b, "%s\n", src.Name)
-		if st.loading {
-			b.WriteString("  loading…\n")
-		} else {
-			fmt.Fprintf(&b, "  %d repos\n", len(st.repos))
+
+		for _, err := range st.problems {
+			problems = append(problems, fmt.Sprintf("%s: %v", src.Name, err))
 		}
-		b.WriteString("\n")
+
+		if !st.loading && len(st.repos) == 0 && len(st.problems) > 0 {
+			continue
+		}
+
+		if m.width > 0 {
+			style = style.Width(m.width)
+		}
+
+		content := titleStyle.Render(src.Name) + "\n" + sourceBody(m.sources[i])
+		panels = append(panels, style.Render(content))
 	}
 
-	f := b.String() + footer
-
-	v := tea.NewView(f)
+	screen := lipgloss.JoinVertical(lipgloss.Left, panels...)
+	v := tea.NewView(screen + "\n" + statusLine(problems, m.width))
 	v.AltScreen = true
 	return v
 }

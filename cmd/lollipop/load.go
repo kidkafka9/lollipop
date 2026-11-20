@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"path/filepath"
 	"time"
 
 	tea "charm.land/bubbletea/v2"
@@ -13,8 +14,15 @@ import (
 // cfg.Sources: its repos, and the folders or repos that couldn't be read.
 type sourceLoadedMsg struct {
 	index    int
-	repos    []gitrepo.Repo
+	repos    []repoRow
 	problems []error
+}
+
+// repoRow is one repo as the screen shows it: its name relative to the folder
+// it was found in, and its state.
+type repoRow struct {
+	name string
+	repo gitrepo.Repo
 }
 
 // loadSource returns a command that finds and reads every repo under src's
@@ -26,7 +34,7 @@ func loadSource(index int, src config.Source) tea.Cmd {
 		defer cancel()
 
 		var (
-			repos    []gitrepo.Repo
+			repos    []repoRow
 			problems []error
 		)
 
@@ -45,9 +53,15 @@ func loadSource(index int, src config.Source) tea.Cmd {
 					problems = append(problems, err)
 					continue
 				}
-				repos = append(repos, repo)
-			}
 
+				rel, err := filepath.Rel(root, path)
+				if err != nil {
+					problems = append(problems, err)
+					continue
+				}
+
+				repos = append(repos, repoRow{name: rel, repo: repo})
+			}
 		}
 
 		return sourceLoadedMsg{index: index, repos: repos, problems: problems}

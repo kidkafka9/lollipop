@@ -50,11 +50,11 @@ func Read(ctx context.Context, path string) (Repo, error) {
 		if exitErr, ok := errors.AsType[*exec.ExitError](err); ok {
 			stderr := strings.TrimSpace(string(exitErr.Stderr))
 			if stderr != "" {
-				return Repo{}, fmt.Errorf("git status failed: %s: %w", stderr, err)
+				return Repo{}, fmt.Errorf("git status failed for repo %s: %s: %w", path, stderr, err)
 			}
 		}
 
-		return Repo{}, fmt.Errorf("git status failed: %w", err)
+		return Repo{}, fmt.Errorf("git status failed for repo %s: %w", path, err)
 	}
 
 	return parseStatus(path, string(out))
