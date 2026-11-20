@@ -18,13 +18,6 @@ type sourceLoadedMsg struct {
 	problems []error
 }
 
-// repoRow is one repo as the screen shows it: its name relative to the folder
-// it was found in, and its state.
-type repoRow struct {
-	name string
-	repo gitrepo.Repo
-}
-
 // loadSource returns a command that finds and reads every repo under src's
 // paths and reports them as a sourceLoadedMsg for index. A folder or repo that
 // can't be read becomes a problem; it doesn't stop the others.
@@ -54,13 +47,17 @@ func loadSource(index int, src config.Source) tea.Cmd {
 					continue
 				}
 
-				rel, err := filepath.Rel(root, path)
+				name, err := filepath.Rel(root, path)
 				if err != nil {
 					problems = append(problems, err)
 					continue
 				}
+				if name == "." {
+					// The root itself is a repo: show its folder name.
+					name = filepath.Base(root)
+				}
 
-				repos = append(repos, repoRow{name: rel, repo: repo})
+				repos = append(repos, repoRow{name: name, repo: repo})
 			}
 		}
 

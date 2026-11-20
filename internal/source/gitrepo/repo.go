@@ -75,7 +75,7 @@ func parseStatus(path, out string) (Repo, error) {
 			fields := strings.Fields(aheadClean)
 
 			if len(fields) != 2 {
-				return Repo{}, fmt.Errorf("unexpected field count (%d) in line %q", len(fields), line)
+				return Repo{}, fmt.Errorf("unexpected field count (%d) in line %q", len(fields), cleanLine)
 			}
 
 			ahead, err := strconv.Atoi(fields[0])

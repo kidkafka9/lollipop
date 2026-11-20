@@ -19,34 +19,33 @@ import (
 	"github.com/kidkafka9/lollipop/internal/config"
 )
 
-func run() error {
-	configPath := flag.String("config", "", "path to the config file")
-	flag.Parse()
-
-	if *configPath == "" {
-		path, err := config.DefaultPath()
-		if err != nil {
-			return err
-		}
-
-		*configPath = path
-	}
-
-	cfg, err := config.Load(*configPath)
-	if err != nil {
-		return err
-	}
-
-	if _, err := tea.NewProgram(newModel(cfg)).Run(); err != nil {
-		return err
-	}
-
-	return nil
-}
-
 func main() {
 	if err := run(); err != nil {
 		fmt.Fprintln(os.Stderr, "lollipop:", err)
 		os.Exit(1)
 	}
+}
+
+// run reads the flags and the config, then runs the dashboard until the user
+// quits. main is the only place that prints errors and exits.
+func run() error {
+	configPath := flag.String("config", "", "path to the config file")
+	flag.Parse()
+
+	path := *configPath
+	if path == "" {
+		var err error
+		path, err = config.DefaultPath()
+		if err != nil {
+			return err
+		}
+	}
+
+	cfg, err := config.Load(path)
+	if err != nil {
+		return err
+	}
+
+	_, err = tea.NewProgram(newModel(cfg)).Run()
+	return err
 }
