@@ -13,9 +13,15 @@ var (
 			Border(lipgloss.RoundedBorder()).
 			BorderForeground(lipgloss.Color("#FF79D0")). // Cheeky
 			Padding(0, 1)
-	titleStyle = lipgloss.NewStyle().Bold(true)
-	warnStyle  = lipgloss.NewStyle().Foreground(lipgloss.Color("#FF577D")) // Coral
-	mutedStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("#A2A0AD")) // Steam
+	titleStyle     = lipgloss.NewStyle().Bold(true)
+	warnStyle      = lipgloss.NewStyle().Foreground(lipgloss.Color("#FF577D"))            // Coral
+	mutedStyle     = lipgloss.NewStyle().Foreground(lipgloss.Color("#A2A0AD"))            // Steam
+	activeTabStyle = lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#FF79D0")) // Cheeky
+	tileStyle      = lipgloss.NewStyle().
+			Border(lipgloss.RoundedBorder()).
+			BorderForeground(lipgloss.Color("#A2A0AD")). // Steam
+			Padding(0, 1).
+			Width(28)
 )
 
 // content returns every source's panel stacked, and the problems of every
@@ -30,6 +36,10 @@ func (m model) content() (string, []string) {
 
 		for _, err := range st.problems {
 			problems = append(problems, fmt.Sprintf("%s: %v", src.Name, err))
+		}
+
+		if len(st.repos) == 0 && len(st.problems) > 0 {
+			continue
 		}
 
 		style := panelStyle
@@ -79,7 +89,7 @@ func sourceBody(st sourceState) string {
 // there are any, and the keys. A long problem is cut at width; 0 means no
 // limit.
 func statusLine(problems []string, width int, loading bool) string {
-	keys := mutedStyle.Render("↑/↓ scroll · r refresh · q quit")
+	keys := mutedStyle.Render("tab pages · enter open · esc back · ↑/↓ scroll · r refresh · q quit")
 	if loading {
 		keys = "refreshing... " + keys
 	}

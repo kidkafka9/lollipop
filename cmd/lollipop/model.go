@@ -15,6 +15,8 @@ type model struct {
 	cfg           config.Config
 	sources       []sourceState
 	viewport      viewport.Model
+	page          page
+	tile          int
 }
 
 // sourceState is what has been loaded for one source. It has the same index
@@ -88,6 +90,26 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			}
 			m = m.syncViewport()
 			return m, m.loadAll()
+		case "tab":
+			return m.open((m.page + 1) % pageCount), nil
+		case "shift+tab":
+			return m.open((m.page + pageCount - 1) % pageCount), nil
+		case "esc":
+			return m.open(pageOverview), nil
+		case "left", "h":
+			if m.page == pageOverview {
+				m.tile = max(m.tile-1, 0)
+				return m.syncViewport(), nil
+			}
+		case "right", "l":
+			if m.page == pageOverview {
+				m.tile = min(m.tile+1, int(pageCount)-2)
+				return m.syncViewport(), nil
+			}
+		case "enter":
+			if m.page == pageOverview {
+				return m.open(page(m.tile + 1)), nil
+			}
 		}
 
 	case sourceLoadedMsg:
@@ -107,7 +129,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 func (m model) View() tea.View {
 	_, problems := m.content()
 
-	v := tea.NewView(m.viewport.View() + "\n" + statusLine(problems, m.width, m.isLoading()))
+	v := tea.NewView(m.tabs() + "\n" + m.viewport.View() + "\n" + statusLine(problems, m.width, m.isLoading()))
 	v.AltScreen = true
 	return v
 }
@@ -116,12 +138,12 @@ func (m model) View() tea.View {
 // space left above the status line. Call it whenever the size or the data
 // changes.
 func (m model) syncViewport() model {
-	panels, problems := m.content()
+	_, problems := m.content()
 	status := statusLine(problems, m.width, m.isLoading())
 
 	m.viewport.SetWidth(m.width)
-	m.viewport.SetHeight(max(0, m.height-lipgloss.Height(status)))
-	m.viewport.SetContent(panels)
+	m.viewport.SetHeight(max(0, m.height-lipgloss.Height(m.tabs())-lipgloss.Height(status)))
+	m.viewport.SetContent(m.pageBody())
 
 	return m
 }
