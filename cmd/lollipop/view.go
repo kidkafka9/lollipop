@@ -32,10 +32,6 @@ func (m model) content() (string, []string) {
 			problems = append(problems, fmt.Sprintf("%s: %v", src.Name, err))
 		}
 
-		if !st.loading && len(st.repos) == 0 && len(st.problems) > 0 {
-			continue
-		}
-
 		style := panelStyle
 		if m.width > 0 {
 			style = style.Width(m.width)
@@ -54,7 +50,7 @@ func sourceBody(st sourceState) string {
 	var lines []string
 
 	switch {
-	case st.loading:
+	case st.loading && len(st.repos) == 0:
 		lines = append(lines, "Loading...")
 	case len(st.repos) == 0:
 		lines = append(lines, "No repos found.")
@@ -82,8 +78,12 @@ func sourceBody(st sourceState) string {
 // statusLine returns the bottom of the screen: a summary of the problems, if
 // there are any, and the keys. A long problem is cut at width; 0 means no
 // limit.
-func statusLine(problems []string, width int) string {
-	help := mutedStyle.Render("↑/↓ scroll · q quit")
+func statusLine(problems []string, width int, loading bool) string {
+	keys := mutedStyle.Render("↑/↓ scroll · r refresh · q quit")
+	if loading {
+		keys = "refreshing... " + keys
+	}
+	help := mutedStyle.Render(keys)
 
 	var text string
 	switch {

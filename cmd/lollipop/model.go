@@ -43,7 +43,22 @@ func newModel(cfg config.Config) model {
 	return model{cfg: cfg, sources: sources, viewport: viewport.New()}
 }
 
+// isLoading reports whether any source is still loading.
+func (m model) isLoading() bool {
+	for _, source := range m.sources {
+		if source.loading {
+			return true
+		}
+	}
+	return false
+}
+
 func (m model) Init() tea.Cmd {
+	return m.loadAll()
+}
+
+// loadAll returns one command that loads every source in the background.
+func (m model) loadAll() tea.Cmd {
 	cmds := make([]tea.Cmd, len(m.cfg.Sources))
 	for i, src := range m.cfg.Sources {
 		cmds[i] = loadSource(i, src)
@@ -64,6 +79,15 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		switch msg.String() {
 		case "ctrl+c", "q":
 			return m, tea.Quit
+		case "r":
+			if m.isLoading() {
+				return m, nil
+			}
+			for i := range m.sources {
+				m.sources[i].loading = true
+			}
+			m = m.syncViewport()
+			return m, m.loadAll()
 		}
 
 	case sourceLoadedMsg:
@@ -83,7 +107,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 func (m model) View() tea.View {
 	_, problems := m.content()
 
-	v := tea.NewView(m.viewport.View() + "\n" + statusLine(problems, m.width))
+	v := tea.NewView(m.viewport.View() + "\n" + statusLine(problems, m.width, m.isLoading()))
 	v.AltScreen = true
 	return v
 }
@@ -93,7 +117,7 @@ func (m model) View() tea.View {
 // changes.
 func (m model) syncViewport() model {
 	panels, problems := m.content()
-	status := statusLine(problems, m.width)
+	status := statusLine(problems, m.width, m.isLoading())
 
 	m.viewport.SetWidth(m.width)
 	m.viewport.SetHeight(max(0, m.height-lipgloss.Height(status)))
